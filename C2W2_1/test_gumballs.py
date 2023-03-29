@@ -1,5 +1,5 @@
 import unittest
-from C2W2_1.GumBallMachine import GumBallMachine
+from C2W2_1.gumballmachine import GumBallMachine
 
 class TestGumBalls(unittest.TestCase):
     """
