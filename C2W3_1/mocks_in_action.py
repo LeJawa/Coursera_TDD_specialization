@@ -46,6 +46,8 @@ m1.configure_mock(**configuration)
 def function(a, b, c):
     return a + b + c  
 
+m2 = Mock()
+m2.side_effect = function
 
 # Use unittest.mock to ensure that the mock object is called correctly
 # I.e, the following should product an error
