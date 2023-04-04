@@ -1,13 +1,14 @@
 import math
 from typing import List
+from pathlib import Path
 
-file = 'C3W1_1/random_nums.txt'
+file = str(Path(__file__).parent.absolute()) + r'/random_nums.txt'
 
 def read_ints() -> List[int]:
     data = []
     with open(file, 'r') as f:
         for line in f.readlines():
-            data.append(int(line));
+            data.append(int(line))
     return data
 
 def count() -> int:
