@@ -1,7 +1,7 @@
 import math
 from typing import List
 
-file = 'random_nums.txt'
+file = 'C3W1_1/random_nums.txt'
 
 def read_ints() -> List[int]:
     data = []
