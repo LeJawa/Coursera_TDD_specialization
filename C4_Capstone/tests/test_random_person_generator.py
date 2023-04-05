@@ -78,7 +78,7 @@ class MyTestCase(unittest.TestCase):
             self.assertIn(result, possible_results)
 
     def test_surname(self):
-        mocked_open = mock_open(read_data=fake_female_first_file)
+        mocked_open = mock_open(read_data=fake_all_last_file)
 
         for i in range(20):
             with patch('C4_Capstone.random_person_generator.open', mocked_open):
@@ -93,7 +93,7 @@ class MyTestCase(unittest.TestCase):
     @patch("C4_Capstone.random_person_generator.male_first_name")
     @patch("C4_Capstone.random_person_generator.female_first_name")
     @patch("C4_Capstone.random_person_generator.surname")
-    def test_generate_random_name(self, mock_male_name, mock_female_name, mock_surname):
+    def test_generate_random_name(self, mock_surname, mock_female_name, mock_male_name):
         mock_male_name.return_value = "Robert"
         mock_female_name.return_value = "Linda"
         mock_surname.return_value = "Smith"
@@ -110,17 +110,15 @@ class MyTestCase(unittest.TestCase):
         for test in sub_tests:
             with self.subTest(minimum=test[0], maximum=test[1]):
                 for _ in range(100):
-                    result = random_age()
+                    result = random_age(test[0], test[1])
                     self.assertTrue(test[0] <= result <= test[1])
 
-    @patch("C4_Capstone.random_person_generator.generate_random_name")
-    def test_random_email_service(self, mock_random_name):
-        mock_random_name.return_value = ("male", "Robert", "Smith")
+    def test_random_email_service(self):
+        possible_providers = ["aol", "gmail", "outlook", "yahoo", "icloud", "yandex"]
 
         for _ in range(30):
             result = random_email_service()
-            regex_pattern = r"^robert\.smith@(?:aol|gmail|outlook|yahoo|icloud|yandex)\.com$"
-            self.assertTrue(re.findall(regex_pattern, result) != [])
+            self.assertIn(result, possible_providers)
 
     def test_random_phone_number(self):
         regex_pattern = r"^[1-9]\d{2}-\d{3}-\d{4}$"
@@ -165,20 +163,20 @@ class MyTestCase(unittest.TestCase):
 
             self.assertEqual(result, expected_result)
 
-    @patch("C4_Capstone.random_person_generator.generate_random_name")
-    @patch("C4_Capstone.random_person_generator.random_age")
-    @patch("C4_Capstone.random_person_generator.random_email_service")
-    @patch("C4_Capstone.random_person_generator.random_phone_number")
     @patch("C4_Capstone.random_person_generator.create_occupation")
+    @patch("C4_Capstone.random_person_generator.random_phone_number")
+    @patch("C4_Capstone.random_person_generator.random_email_service")
+    @patch("C4_Capstone.random_person_generator.random_age")
+    @patch("C4_Capstone.random_person_generator.generate_random_name")
     def test_create_person(self, mock_name, mock_age, mock_email, mock_phone, mock_occupation):
         mock_name.return_value = ("male", "Robert", "Smith")
         mock_age.return_value = 34
-        mock_email.return_value = "email"
+        mock_email.return_value = "gmail"
         mock_phone.return_value = "123"
         mock_occupation.return_value = "Occupation"
 
         result = create_person()
-        expected_result = {'first_name': 'Robert', 'last_name': 'Smith', 'email': 'email', 'sex': 'male', 'age': 34, 'job': 'Occupation', 'phone': '123'}
+        expected_result = {'first_name': 'Robert', 'last_name': 'Smith', 'email': 'robert.smith@gmail.com', 'sex': 'male', 'age': 34, 'job': 'Occupation', 'phone': '123'}
 
         self.assertEqual(expected_result, result)
 
